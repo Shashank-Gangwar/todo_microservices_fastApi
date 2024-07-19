@@ -17,6 +17,11 @@ class UserInDB(BaseModel):
 
 # Routes
 
+@app.get("/")
+async def healthcheck():
+    return {"message":"everything is fine"}
+
+
 @app.post("/signup/")
 async def create_user(user: UserInDB,response:Response):
     new_user = user.dict()

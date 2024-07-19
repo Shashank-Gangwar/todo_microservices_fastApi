@@ -1,10 +1,12 @@
 from pymongo import MongoClient
-from dotenv import load_dotenv
-import os
+# from dotenv import load_dotenv
+# import os
 
-load_dotenv(".env")
+# load_dotenv(".env")
 
-MONGO_URI = os.getenv('MONGO_URI')
+# MONGO_URI = os.getenv('MONGO_URI')
+
+MONGO_URI = "mongodb+srv://shashankgangwar97531:45h716S0lPHhtV9V@cluster0.6df0acr.mongodb.net/fastapi"
 
 client = MongoClient(MONGO_URI)
 db = client.fastapi
