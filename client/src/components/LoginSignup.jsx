@@ -1,58 +1,123 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
   const [checkIn, setCheckIn] = useState("Login");
-  const [errorMsg, setErrorMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const usernameRef = useRef("");
+  const passwordRef = useRef("");
+
+  useEffect(() => {
+    handleCookiesLogin();
+  }, []);
+
+  const handleCookiesLogin = async () => {
+    await axios
+      .post(
+        "",
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log("Automatic login failed");
+      });
+  };
+
+  const handleOnSubmit = async (event) => {
+    event.preventDefault();
+    const username = usernameRef.current.value;
+    const password = passwordRef.current.value;
+
+    if (password.length < 6) {
+      setErrorMsg(
+        "Invalid Password! Password should have at least 6 characters "
+      );
+      passwordRef.current.value = "";
+      return;
+    }
+
+    setErrorMsg("");
+    const loginDetails = { username: username, password: password };
+
+    passwordRef.current.value = "";
+
+    setLoading(true);
+    await axios
+      .post("https://todo-fastapi-auth.onrender.com/login", loginDetails, {
+        withCredentials: true,
+      })
+      .then(function (response) {
+        console.log("response \n", response);
+        setLoading(false);
+        // setUser(response.data.data);
+        navigate("/todo");
+      })
+      .catch(function (error) {
+        setLoading(false);
+        console.log(error);
+      });
+  };
 
   return (
     <div
-      class="form-signin w-100 h-100 m-auto"
+      className="form-signin w-100 h-100 m-auto"
       style={{ maxWidth: "500px", paddingTop: "10vh" }}
     >
       <h1 className=" text-center mb-5 pb-5 text-primary">ToDo</h1>
-      <form>
-        <h1 class="h3 mb-3 fw-normal">{checkIn}</h1>
+      <form onSubmit={handleOnSubmit}>
+        <h1 className="h3 mb-3 fw-normal">{checkIn}</h1>
 
-        <div class="form-floating">
+        <div className="form-floating">
           <input
             type="text"
-            class="form-control mb-2"
+            className="form-control mb-2"
             id="floatingInput"
             placeholder="name"
+            ref={usernameRef}
           />
-          <label for="floatingInput">UserName</label>
+          <label htmlFor="floatingInput">UserName</label>
         </div>
-        <div class="form-floating mb-4">
+        <div className="form-floating mb-4">
           <input
             type="password"
-            class="form-control"
+            className="form-control"
             id="floatingPassword"
             placeholder="Password"
+            ref={passwordRef}
           />
-          <label for="floatingPassword">Password</label>
+          <label htmlFor="floatingPassword">Password</label>
 
           {checkIn === "Signup" && (
-            <div class="form-floating">
+            <div className="form-floating">
               <input
                 type="password"
-                class="form-control mt-2"
+                className="form-control mt-2"
                 id="floatingConfirmPassword"
                 placeholder="Password"
               />
-              <label for="floatingConfirmPassword">Confirm Password</label>
+              <label htmlFor="floatingConfirmPassword">Confirm Password</label>
             </div>
           )}
-          <div class="form-floating mt-1">
+          <div className="form-floating mt-1">
             <span className={`${!errorMsg && "d-none"} text-danger ms-1`}>
               error
             </span>
           </div>
         </div>
 
-        <button class="btn btn-primary w-100 py-2" type="submit">
+        <button className="btn btn-primary w-100 py-2" type="submit">
           Submit
         </button>
-        <p class="mt-5 mb-3 text-body-secondary text-end">
+        <p className="mt-5 mb-3 text-body-secondary text-end">
           {checkIn === "Login" ? "New User?" : "Already have an Account?"}{" "}
           <a
             className="text-decoration-none pointer-cursor"

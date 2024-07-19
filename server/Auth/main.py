@@ -3,10 +3,27 @@ from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from datetime import timedelta
 from db import users_collection
+from fastapi.middleware.cors import CORSMiddleware
 from logic import get_password_hash,authenticate_user,create_access_token
 from config import ACCESS_TOKEN_EXPIRE_MINUTES
 
 app=FastAPI()
+
+# Cors
+origins = [
+    "http://localhost:5173/",  # Adjust the port if your frontend runs on a different one
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allows all origins from the list
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
+
+
 
 # User model
 class UserInDB(BaseModel):

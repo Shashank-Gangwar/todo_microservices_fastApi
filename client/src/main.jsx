@@ -4,11 +4,18 @@ import App from "./App.jsx";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Todo from "./components/Todo.jsx";
+import LoginSignup from "./components/LoginSignup.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <LoginSignup />,
+      },
+    ],
   },
   {
     path: "/todo",

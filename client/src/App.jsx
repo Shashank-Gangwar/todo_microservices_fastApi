@@ -1,8 +1,13 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import LoginSignup from "./components/LoginSignup";
+import TodoContext from "./store/TodoContext";
+import { Outlet } from "react-router-dom";
 
 function App() {
-  return <LoginSignup />;
+  return (
+    <TodoContext>
+      <Outlet />
+    </TodoContext>
+  );
 }
 
 export default App;
