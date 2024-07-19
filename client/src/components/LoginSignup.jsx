@@ -54,6 +54,9 @@ const LoginSignup = () => {
     await axios
       .post("https://todo-fastapi-auth.onrender.com/login", loginDetails, {
         withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
       .then(function (response) {
         console.log("response \n", response);

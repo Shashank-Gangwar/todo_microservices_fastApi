@@ -11,7 +11,7 @@ app=FastAPI()
 
 # Cors
 origins = [
-    "http://localhost:5173/",  # Adjust the port if your frontend runs on a different one
+    "http://localhost:5173",  # Adjust the port if your frontend runs on a different one
 ]
 
 app.add_middleware(
@@ -39,7 +39,7 @@ async def healthcheck():
     return {"message":"everything is fine"}
 
 
-@app.post("/signup/")
+@app.post("/signup")
 async def create_user(user: UserInDB,response:Response):
     new_user = user.dict()
 
@@ -129,7 +129,7 @@ async def login_for_access_token( response:Response,form_data: OAuth2PasswordReq
 
 
 
-@app.get("/get_user/",response_model=dict)
+@app.get("/get_user",response_model=dict)
 async def get_user_details(response:Response,access_token: str = Cookie(None)):
     # Check if access_token is present in the cookie
     print(access_token)
