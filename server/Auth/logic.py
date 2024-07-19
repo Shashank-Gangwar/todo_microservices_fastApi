@@ -2,13 +2,7 @@ from jose import  jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from db import users_collection
-from dotenv import load_dotenv
-import os
-
-load_dotenv(".env")
-
-ALGORITHM = os.getenv('ALGORITHM')
-SECRET_KEY = os.getenv('SECRET_KEY')
+from config import ALGORITHM,SECRET_KEY
 
 
 

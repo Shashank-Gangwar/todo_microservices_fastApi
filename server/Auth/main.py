@@ -4,11 +4,9 @@ from pydantic import BaseModel
 from datetime import timedelta
 from db import users_collection
 from logic import get_password_hash,authenticate_user,create_access_token
-from dotenv import load_dotenv
-import os
+from config import ACCESS_TOKEN_EXPIRE_MINUTES
 
-
-app = FastAPI()
+app=FastAPI()
 
 # User model
 class UserInDB(BaseModel):
@@ -16,8 +14,6 @@ class UserInDB(BaseModel):
     password: str
 
 
-load_dotenv(".env")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))
 
 # Routes
 
