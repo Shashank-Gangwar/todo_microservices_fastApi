@@ -14,7 +14,7 @@ const CreateTodo = () => {
     const TodoItem = { title: title, completed: false, userid: user._id };
 
     await axios
-      .post("http://127.0.0.1:3000/todos/create/", TodoItem, {
+      .post("https://todo-fastapi-todo.onrender.com/todos/create/", TodoItem, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",

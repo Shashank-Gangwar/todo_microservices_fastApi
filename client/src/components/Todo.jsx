@@ -25,7 +25,7 @@ const Todo = () => {
 
     await axios
       .delete(
-        `http://127.0.0.1:3000/todos/delete/${todo_id}`,
+        `https://todo-fastapi-todo.onrender.com/todos/delete/${todo_id}`,
         {},
         {
           withCredentials: true,
@@ -64,12 +64,16 @@ const Todo = () => {
     };
 
     await axios
-      .put(`http://127.0.0.1:3000/todos/edit/${editTodo.id}`, TodoItem, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .put(
+        `https://todo-fastapi-todo.onrender.com/todos/edit/${editTodo.id}`,
+        TodoItem,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then(function (response) {
         const updatedTodos = todos.map((todo) => {
           if (todo.id === editTodo.id) {

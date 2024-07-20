@@ -63,7 +63,7 @@ const LoginSignup = () => {
 
     setLoading(true);
     await axios
-      .post("http://127.0.0.1:8000/login", loginDetails, {
+      .post("https://todo-fastapi-auth.onrender.com/login", loginDetails, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -114,7 +114,7 @@ const LoginSignup = () => {
 
     const url = await axios
       .post(
-        "http://127.0.0.1:8000/signup",
+        "https://todo-fastapi-auth.onrender.com/signup",
 
         loginDetails,
         {
@@ -143,7 +143,7 @@ const LoginSignup = () => {
     setLoading(true);
     await axios
       .get(
-        `http://127.0.0.1:3000/todos/get/${data._id}`,
+        `https://todo-fastapi-auth.onrender.com/todos/get/${data._id}`,
         {},
         {
           withCredentials: true,
