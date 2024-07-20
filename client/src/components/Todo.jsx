@@ -5,11 +5,13 @@ import { TodoState } from "../store/TodoContext";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Loader from "./Loader";
 
 const Todo = () => {
   const [edit, setEdit] = useState(false);
   const [editTodo, setEditTodo] = useState({});
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user, todos, loggedIn, setTodos } = TodoState();
   const navigate = useNavigate();
 
@@ -63,6 +65,7 @@ const Todo = () => {
       userid: editTodo.userid,
     };
 
+    setLoading(true);
     await axios
       .put(
         `https://todo-fastapi-todo.onrender.com/todos/edit/${editTodo.id}`,
@@ -81,15 +84,13 @@ const Todo = () => {
           }
           return todo;
         });
-        // console.log(updatedTodos);
-        // setTodos([...todos, response.data[0]]);
-        // console.log(response.data);
-        // titleRef.current.value = "";
+        setLoading(false);
         setEdit(false);
       })
       .catch((error) => {
         console.log(error);
         setError("Error! Unable to make changes.");
+        setLoading(false);
       });
   };
   // console.log(todos);
@@ -99,28 +100,35 @@ const Todo = () => {
       className="w-100 d-flex align-items-center justify-content-center"
       style={{ height: "100vh" }}
     >
-      <div
-        className="modal-content rounded-4 shadow p-3 mx-2"
-        style={{ maxWidth: "400px" }}
-      >
-        <div className="modal-body py-0 my-3 w-100 d-flex justify-content-center">
-          <input
-            type="text"
-            className="form-control w-100 "
-            placeholder="Edit your Todo"
-            ref={editTodoRef}
-          />
+      {loading ? (
+        <Loader />
+      ) : (
+        <div
+          className="modal-content rounded-4 shadow p-3 mx-5"
+          style={{ maxWidth: "400px" }}
+        >
+          <div className="modal-body py-0 my-3 w-100 d-flex justify-content-center">
+            <input
+              type="text"
+              className="form-control w-100 "
+              placeholder="Edit your Todo"
+              ref={editTodoRef}
+            />
+          </div>
+          <span className="text-danger mb-2 ms-2">{error}</span>
+          <div className="modal-footer w-100 gap-2 pb-3 border-top-0">
+            <button className="btn  btn-primary" onClick={handleEditTodo}>
+              Save changes
+            </button>
+            <button
+              className="btn  btn-secondary"
+              onClick={() => setEdit(false)}
+            >
+              Close
+            </button>
+          </div>
         </div>
-        <span className="text-danger mb-2 ms-2">{error}</span>
-        <div className="modal-footer w-100 gap-2 pb-3 border-top-0">
-          <button className="btn  btn-primary" onClick={handleEditTodo}>
-            Save changes
-          </button>
-          <button className="btn  btn-secondary" onClick={() => setEdit(false)}>
-            Close
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   ) : (
     <>
@@ -129,11 +137,15 @@ const Todo = () => {
         <div className="list-group container">
           {todos[0] == undefined ? (
             <h3 className="text-center">Hi! Create your first Todo</h3>
+          ) : loading ? (
+            <div className="text-center">
+              <Loader />
+            </div>
           ) : (
             todos.map((todo_item, index) => {
               return (
                 <span
-                  className="list-group-item list-group-item-action d-flex mx-auto"
+                  className={`list-group-item list-group-item-action d-flex mx-auto`}
                   style={{ maxWidth: "800px", width: "100%" }}
                   key={index}
                 >

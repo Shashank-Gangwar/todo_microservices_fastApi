@@ -36,8 +36,6 @@ app.add_middleware(
 async def get_all_todos(userid:str):
     todos =  list_serial(todos_collection.find({"userid": str(userid)}))
     print(todos)
-    if not todos:
-        print("not"                  ,todos)
     return todos
 
 

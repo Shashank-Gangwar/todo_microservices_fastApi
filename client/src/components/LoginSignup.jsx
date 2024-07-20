@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { TodoState } from "../store/TodoContext";
+import Loader from "./Loader";
 
 const LoginSignup = () => {
   const [checkIn, setCheckIn] = useState("Login");
@@ -139,8 +140,8 @@ const LoginSignup = () => {
   };
 
   const handleGetTodos = async (data) => {
-    // console.log(data);
-    setLoading(true);
+    console.log(data);
+
     await axios
       .get(
         `https://todo-fastapi-auth.onrender.com/todos/get/${data._id}`,
@@ -153,82 +154,95 @@ const LoginSignup = () => {
         }
       )
       .then(function (response) {
-        // console.log("response \n", response);
+        console.log("response \n", response);
         setTodos(response.data);
-        setLoading(false);
       })
       .catch(function (error) {
-        setLoading(false);
-        // console.log(error);
+        console.log(error);
       });
   };
 
   return (
-    <div
-      className="form-signin w-100 h-100 m-auto"
-      style={{ maxWidth: "500px", paddingTop: "10vh" }}
-    >
-      <h1 className=" text-center mb-5 pb-5 text-primary">ToDo</h1>
-      <form onSubmit={handleOnsubmit}>
-        <h1 className="h3 mb-3 fw-normal">{checkIn}</h1>
+    <>
+      <div
+        className={`${
+          loading ? "d-flex" : "d-none"
+        } align-items-center justify-content-center position-absolute bg-light bg-opacity-75`}
+        style={{ width: "100vw", height: "100vh", zIndex: "999" }}
+      >
+        <Loader />
+      </div>
 
-        <div className="form-floating">
-          <input
-            type="text"
-            className="form-control mb-2"
-            id="floatingInput"
-            placeholder="name"
-            ref={usernameRef}
-          />
-          <label htmlFor="floatingInput">UserName</label>
-        </div>
-        <div className="form-floating mb-4">
-          <input
-            type="password"
-            className="form-control"
-            id="floatingPassword"
-            placeholder="Password"
-            ref={passwordRef}
-          />
-          <label htmlFor="floatingPassword">Password</label>
+      <div
+        className="form-signin w-100 h-100 m-auto"
+        style={{ maxWidth: "500px", paddingTop: "10vh" }}
+      >
+        <h1 className=" text-center mb-5 pb-5 text-primary">ToDo</h1>
+        <form onSubmit={handleOnsubmit} className="mx-5">
+          <h1 className="h3 mb-3 fw-normal">{checkIn}</h1>
 
-          {checkIn === "Signup" && (
-            <div className="form-floating">
-              <input
-                type="password"
-                className="form-control mt-2"
-                id="floatingConfirmPassword"
-                placeholder="ConfirmPassword"
-                ref={confirmPasswordRef}
-              />
-              <label htmlFor="floatingConfirmPassword">Confirm Password</label>
-            </div>
-          )}
-          <div className="form-floating mt-1">
-            <span className={`${!errorMsg && "d-none"} text-danger ms-1`}>
-              {errorMsg}
-            </span>
+          <div className="form-floating">
+            <input
+              type="text"
+              className="form-control mb-2"
+              id="floatingInput"
+              placeholder="name"
+              ref={usernameRef}
+            />
+            <label htmlFor="floatingInput">UserName</label>
           </div>
-        </div>
+          <div className="form-floating mb-4">
+            <input
+              type="password"
+              className="form-control"
+              id="floatingPassword"
+              placeholder="Password"
+              ref={passwordRef}
+            />
+            <label htmlFor="floatingPassword">Password</label>
 
-        <button className="btn btn-primary w-100 py-2" type="submit">
-          Submit
-        </button>
-        <p className="mt-5 mb-3 text-body-secondary text-end">
-          {checkIn === "Login" ? "New User?" : "Already have an Account?"}{" "}
-          <a
-            className="text-decoration-none pointer-cursor"
-            onClick={() => {
-              checkIn === "Signup" ? setCheckIn("Login") : setCheckIn("Signup");
-              setErrorMsg("");
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            {checkIn === "Login" ? "Signup?" : "Login."}
-          </a>
-        </p>
-      </form>
-    </div>
+            {checkIn === "Signup" && (
+              <div className="form-floating">
+                <input
+                  type="password"
+                  className="form-control mt-2"
+                  id="floatingConfirmPassword"
+                  placeholder="ConfirmPassword"
+                  ref={confirmPasswordRef}
+                />
+                <label htmlFor="floatingConfirmPassword">
+                  Confirm Password
+                </label>
+              </div>
+            )}
+            <div className="form-floating mt-1">
+              <span className={`${!errorMsg && "d-none"} text-danger ms-1`}>
+                {errorMsg}
+              </span>
+            </div>
+          </div>
+
+          <button className="btn btn-primary w-100 py-2" type="submit">
+            Submit
+          </button>
+          <p className="mt-5 mb-3 text-body-secondary text-end">
+            {checkIn === "Login" ? "New User?" : "Already have an Account?"}{" "}
+            <a
+              className="text-decoration-none pointer-cursor"
+              onClick={() => {
+                checkIn === "Signup"
+                  ? setCheckIn("Login")
+                  : setCheckIn("Signup");
+                setErrorMsg("");
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              {checkIn === "Login" ? "Signup?" : "Login."}
+            </a>
+          </p>
+        </form>
+      </div>
+    </>
   );
 };
 
