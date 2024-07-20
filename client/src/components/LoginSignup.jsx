@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { TodoState } from "../store/TodoContext";
 
 const LoginSignup = () => {
   const [checkIn, setCheckIn] = useState("Login");
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setUser, user, setTodos, setLoggedIn } = TodoState();
 
   const usernameRef = useRef("");
   const passwordRef = useRef("");
+  const confirmPasswordRef = useRef("");
 
   useEffect(() => {
     handleCookiesLogin();
@@ -25,15 +28,23 @@ const LoginSignup = () => {
         }
       )
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
       })
       .catch((error) => {
-        console.log("Automatic login failed");
+        // console.log("Automatic login failed");
       });
   };
 
-  const handleOnSubmit = async (event) => {
+  const handleOnsubmit = (event) => {
     event.preventDefault();
+    if (checkIn === "Login") {
+      handleLogin();
+    } else {
+      handleSignup();
+    }
+  };
+
+  const handleLogin = async () => {
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
 
@@ -52,21 +63,103 @@ const LoginSignup = () => {
 
     setLoading(true);
     await axios
-      .post("https://todo-fastapi-auth.onrender.com/login", loginDetails, {
+      .post("http://127.0.0.1:8000/login", loginDetails, {
         withCredentials: true,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
       })
       .then(function (response) {
-        console.log("response \n", response);
+        // console.log("response \n", response);
+        handleGetTodos(response.data);
+        setUser(response.data);
+        setLoggedIn(true);
         setLoading(false);
-        // setUser(response.data.data);
         navigate("/todo");
       })
       .catch(function (error) {
         setLoading(false);
         console.log(error);
+      });
+  };
+
+  const handleSignup = async () => {
+    const username = usernameRef.current.value;
+    const password = passwordRef.current.value;
+    const confirmPassword = confirmPasswordRef.current.value;
+
+    if (password.length < 6) {
+      setErrorMsg(
+        "Invalid Password! Password should have at least 6 characters "
+      );
+      passwordRef.current.value = "";
+      confirmPasswordRef.current.value = "";
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMsg("confirm password doesn't match.");
+      passwordRef.current.value = "";
+      confirmPasswordRef.current.value = "";
+      return;
+    }
+
+    setErrorMsg("");
+    const loginDetails = { username: username, password: password };
+
+    passwordRef.current.value = "";
+    confirmPasswordRef.current.value = "";
+
+    setLoading(true);
+
+    const url = await axios
+      .post(
+        "http://127.0.0.1:8000/signup",
+
+        loginDetails,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(function (response) {
+        // console.log("response \n", response);
+        handleGetTodos(response.data);
+        setUser(response.data);
+        setLoggedIn(true);
+        setLoading(false);
+        navigate("/todo");
+      })
+      .catch(function (error) {
+        setLoading(false);
+        console.log(error);
+      });
+  };
+
+  const handleGetTodos = async (data) => {
+    // console.log(data);
+    setLoading(true);
+    await axios
+      .get(
+        `http://127.0.0.1:3000/todos/get/${data._id}`,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      )
+      .then(function (response) {
+        // console.log("response \n", response);
+        setTodos(response.data);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        setLoading(false);
+        // console.log(error);
       });
   };
 
@@ -76,7 +169,7 @@ const LoginSignup = () => {
       style={{ maxWidth: "500px", paddingTop: "10vh" }}
     >
       <h1 className=" text-center mb-5 pb-5 text-primary">ToDo</h1>
-      <form onSubmit={handleOnSubmit}>
+      <form onSubmit={handleOnsubmit}>
         <h1 className="h3 mb-3 fw-normal">{checkIn}</h1>
 
         <div className="form-floating">
@@ -105,14 +198,15 @@ const LoginSignup = () => {
                 type="password"
                 className="form-control mt-2"
                 id="floatingConfirmPassword"
-                placeholder="Password"
+                placeholder="ConfirmPassword"
+                ref={confirmPasswordRef}
               />
               <label htmlFor="floatingConfirmPassword">Confirm Password</label>
             </div>
           )}
           <div className="form-floating mt-1">
             <span className={`${!errorMsg && "d-none"} text-danger ms-1`}>
-              error
+              {errorMsg}
             </span>
           </div>
         </div>
@@ -126,6 +220,7 @@ const LoginSignup = () => {
             className="text-decoration-none pointer-cursor"
             onClick={() => {
               checkIn === "Signup" ? setCheckIn("Login") : setCheckIn("Signup");
+              setErrorMsg("");
             }}
             style={{ cursor: "pointer" }}
           >

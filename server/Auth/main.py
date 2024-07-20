@@ -88,6 +88,7 @@ async def create_user(user: UserInDB,response:Response):
 
 @app.post("/login", response_model=dict)
 async def login_for_access_token( response:Response,form_data: OAuth2PasswordRequestForm = Depends()):
+    print(form_data)
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
