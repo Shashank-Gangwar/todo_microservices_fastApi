@@ -11,7 +11,8 @@ app=FastAPI()
 
 # Cors
 origins = [
-    "http://localhost:5173",  # Adjust the port if your frontend runs on a different one
+    "http://localhost:5173",
+    "https://todo-fastapi.netlify.app",  # Adjust the port if your frontend runs on a different one
 ]
 
 app.add_middleware(
