@@ -8,6 +8,7 @@ const LoginSignup = () => {
   const [checkIn, setCheckIn] = useState("Login");
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [wait, setWait] = useState(false);
   const navigate = useNavigate();
   const { setUser, user, setTodos, setLoggedIn } = TodoState();
 
@@ -63,6 +64,9 @@ const LoginSignup = () => {
     passwordRef.current.value = "";
 
     setLoading(true);
+    const timer = setTimeout(() => {
+      setWait(true);
+    }, 10000);
     await axios
       .post("https://todo-fastapi-auth.onrender.com/login", loginDetails, {
         withCredentials: true,
@@ -75,12 +79,15 @@ const LoginSignup = () => {
         handleGetTodos(response.data);
         setUser(response.data);
         setLoggedIn(true);
+        clearTimeout(timer);
         setLoading(false);
         navigate("/todo");
       })
       .catch(function (error) {
+        clearTimeout(timer);
+        setErrorMsg(error.response?.data?.detail);
         setLoading(false);
-        console.log(error);
+        //console.log(error);
       });
   };
 
@@ -112,8 +119,11 @@ const LoginSignup = () => {
     confirmPasswordRef.current.value = "";
 
     setLoading(true);
+    const timer = setTimeout(() => {
+      setWait(true);
+    }, 10000);
 
-    const url = await axios
+    await axios
       .post(
         "https://todo-fastapi-auth.onrender.com/signup",
 
@@ -130,17 +140,20 @@ const LoginSignup = () => {
         handleGetTodos(response.data);
         setUser(response.data);
         setLoggedIn(true);
+        clearTimeout(timer);
         setLoading(false);
         navigate("/todo");
       })
       .catch(function (error) {
+        clearTimeout(timer);
         setLoading(false);
-        console.log(error);
+        setErrorMsg(error.response?.data?.detail);
+        // console.log(error);
       });
   };
 
   const handleGetTodos = async (data) => {
-    console.log(data);
+    // console.log(data);
 
     await axios
       .get(
@@ -154,11 +167,11 @@ const LoginSignup = () => {
         }
       )
       .then(function (response) {
-        console.log("response \n", response);
+        // console.log("response \n", response);
         setTodos(response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
       });
   };
 
@@ -167,10 +180,13 @@ const LoginSignup = () => {
       <div
         className={`${
           loading ? "d-flex" : "d-none"
-        } align-items-center justify-content-center position-absolute bg-light bg-opacity-75`}
+        } align-items-center justify-content-center position-absolute bg-light bg-opacity-75 flex-column`}
         style={{ width: "100vw", height: "100vh", zIndex: "999" }}
       >
         <Loader />
+        <span className={`text-primary text-center ${!wait && "d-none"}`}>
+          Please Wait! <br /> Server is taking time to respond.
+        </span>
       </div>
 
       <div

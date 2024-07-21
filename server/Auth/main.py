@@ -43,7 +43,19 @@ async def healthcheck():
 @app.post("/signup")
 async def create_user(user: UserInDB,response:Response):
     new_user = user.dict()
+    
+    if not new_user["username"] or new_user["username"] == "" :
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="username Invalid",
+        )
 
+    if not new_user["password"] or new_user["password"] == "" :
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password Invalid",
+        )
+    
     # Check if the user already exists based on the userID
     existing_user = users_collection.find_one({"username": new_user["username"]})
 
@@ -69,7 +81,7 @@ async def create_user(user: UserInDB,response:Response):
     if not userId:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="User Signup Failed",
+            detail="User Signup Failed. Try Again later.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

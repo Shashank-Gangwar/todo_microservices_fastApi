@@ -44,7 +44,7 @@ const Todo = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
         setLoading(false);
       });
   };
@@ -90,7 +90,7 @@ const Todo = () => {
         setEdit(false);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
         setError("Error! Unable to make changes.");
         setLoading(false);
       });
