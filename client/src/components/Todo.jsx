@@ -24,7 +24,7 @@ const Todo = () => {
 
   const handleDeleteItem = async (todo_id) => {
     // console.log(todo_id);
-
+    setLoading(true);
     await axios
       .delete(
         `https://todo-fastapi-todo.onrender.com/todos/delete/${todo_id}`,
@@ -41,9 +41,11 @@ const Todo = () => {
           return todo.id !== todo_id && todo;
         });
         setTodos(newTodos);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
   };
 
@@ -165,7 +167,9 @@ const Todo = () => {
                       </button>
                       <button
                         className="btn btn-outline-danger border-0  text-nowrap fs-4 px-2 pt-0 pb-1"
-                        onClick={() => handleDeleteItem(todo_item.id)}
+                        onClick={() => {
+                          handleDeleteItem(todo_item.id);
+                        }}
                       >
                         <MdDeleteOutline />
                       </button>

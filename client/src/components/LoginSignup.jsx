@@ -15,26 +15,26 @@ const LoginSignup = () => {
   const passwordRef = useRef("");
   const confirmPasswordRef = useRef("");
 
-  useEffect(() => {
-    handleCookiesLogin();
-  }, []);
+  // useEffect(() => {
+  //   handleCookiesLogin();
+  // }, []);
 
-  const handleCookiesLogin = async () => {
-    await axios
-      .post(
-        "",
-        {},
-        {
-          withCredentials: true,
-        }
-      )
-      .then(function (response) {
-        // console.log(response);
-      })
-      .catch((error) => {
-        // console.log("Automatic login failed");
-      });
-  };
+  // const handleCookiesLogin = async () => {
+  //   await axios
+  //     .post(
+  //       "",
+  //       {},
+  //       {
+  //         withCredentials: true,
+  //       }
+  //     )
+  //     .then(function (response) {
+  //       // console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       // console.log("Automatic login failed");
+  //     });
+  // };
 
   const handleOnsubmit = (event) => {
     event.preventDefault();
@@ -144,8 +144,8 @@ const LoginSignup = () => {
 
     await axios
       .get(
-        `https://todo-fastapi-auth.onrender.com/todos/get/${data._id}`,
-        {},
+        `https://todo-fastapi-todo.onrender.com/todos/get/${data._id}`,
+
         {
           withCredentials: true,
           headers: {
