@@ -184,6 +184,7 @@ const LoginSignup = () => {
         style={{ width: "100vw", height: "100vh", zIndex: "999" }}
       >
         <Loader />
+
         <span className={`text-primary text-center ${!wait && "d-none"}`}>
           Please Wait! <br /> Server is taking time to respond.
         </span>

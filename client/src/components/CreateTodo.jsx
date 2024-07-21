@@ -63,7 +63,6 @@ const CreateTodo = () => {
           </button>
         </div>
       </div>
-      <hr className="hr" />
     </div>
   );
 };

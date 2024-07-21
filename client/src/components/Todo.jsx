@@ -99,7 +99,7 @@ const Todo = () => {
 
   return edit ? (
     <div
-      className="w-100 d-flex align-items-center justify-content-center"
+      className="w-100 d-flex align-items-center justify-content-center pb-5"
       style={{ height: "100vh" }}
     >
       {loading ? (
@@ -107,7 +107,7 @@ const Todo = () => {
       ) : (
         <div
           className="modal-content rounded-4 shadow p-3 mx-5"
-          style={{ maxWidth: "400px" }}
+          style={{ maxWidth: "400px", marginBottom: "25vh" }}
         >
           <div className="modal-body py-0 my-3 w-100 d-flex justify-content-center">
             <input
@@ -135,7 +135,7 @@ const Todo = () => {
   ) : (
     <>
       <CreateTodo />
-      <div className="d-flex flex-column flex-md-row p-4 py-md-5 align-items-center justify-content-center ">
+      <div className="d-flex flex-column flex-md-row p-4 py-md-5 align-items-center justify-content-center">
         <div className="list-group container">
           {todos[0] == undefined ? (
             <h3 className="text-center">Hi! Create your first Todo</h3>
